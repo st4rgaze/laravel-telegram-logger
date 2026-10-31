@@ -6,6 +6,8 @@ All notable changes to this project are documented in this file. The format is b
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-01
+
 ### Added
 
 - `telegram` log driver for Laravel 12 and 13 on PHP 8.3+.
@@ -17,3 +19,6 @@ All notable changes to this project are documented in this file. The format is b
 - Request context (URL, method, route, user id; IP opt-in).
 - `MessageFormatter` contract and `TelegramText` builder for custom layouts.
 - `telegram-logger:test` diagnostic command.
+
+[Unreleased]: https://github.com/st4rgaze/laravel-telegram-logger/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/st4rgaze/laravel-telegram-logger/releases/tag/v1.0.0

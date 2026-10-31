@@ -1,0 +1,79 @@
+{
+    "name": "st4rgaze/laravel-telegram-logger",
+    "description": "Secure, queued and throttled Telegram log channel for Laravel.",
+    "keywords": ["php", "laravel", "telegram", "logger", "logging", "monolog", "alerts", "telegram-logger"],
+    "license": "MIT",
+    "homepage": "https://github.com/st4rgaze/laravel-telegram-logger",
+    "authors": [
+        {
+            "name": "Indra Hermawan",
+            "homepage": "https://github.com/st4rgaze"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "illuminate/bus": "^12.0|^13.0",
+        "illuminate/cache": "^12.0|^13.0",
+        "illuminate/console": "^12.0|^13.0",
+        "illuminate/contracts": "^12.0|^13.0",
+        "illuminate/database": "^12.0|^13.0",
+        "illuminate/http": "^12.0|^13.0",
+        "illuminate/log": "^12.0|^13.0",
+        "illuminate/queue": "^12.0|^13.0",
+        "illuminate/support": "^12.0|^13.0",
+        "monolog/monolog": "^3.0",
+        "symfony/polyfill-php84": "^1.31"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.29",
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-type-coverage": "^4.0",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "rector/rector": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "St4rgaze\\TelegramLogger\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "refactor": "rector",
+        "lint": "pint --parallel",
+        "test:refactor": "rector --dry-run",
+        "test:lint": "pint --parallel --test",
+        "test:types": "phpstan analyse --ansi --memory-limit=1G",
+        "test:type-coverage": "pest --type-coverage --min=100",
+        "test:unit": "pest --colors=always --coverage --min=95 --parallel",
+        "test": [
+            "@test:refactor",
+            "@test:lint",
+            "@test:types",
+            "@test:type-coverage",
+            "@test:unit"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "St4rgaze\\TelegramLogger\\TelegramLoggerServiceProvider"
+            ]
+        }
+    }
+}

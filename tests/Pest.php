@@ -106,3 +106,24 @@ function captureErrorLog(Closure $callback): string
 
     return $contents;
 }
+
+/**
+ * Run the callback with PHP recording string call arguments in stack traces, as development php.ini files do.
+ *
+ * @template TResult
+ *
+ * @param  Closure(): TResult  $callback
+ * @return TResult
+ */
+function withTraceArguments(Closure $callback): mixed
+{
+    $ignoreArgs = ini_set('zend.exception_ignore_args', '0');
+    $maxLength = ini_set('zend.exception_string_param_max_len', '15');
+
+    try {
+        return $callback();
+    } finally {
+        ini_set('zend.exception_ignore_args', (string) $ignoreArgs);
+        ini_set('zend.exception_string_param_max_len', (string) $maxLength);
+    }
+}

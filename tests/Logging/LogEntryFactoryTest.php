@@ -72,8 +72,7 @@ it('redacts the context and extra before the formatter sees them', function (): 
 });
 
 it('masks patterns in the message, exception messages and traces', function (): void {
-    ini_set('zend.exception_ignore_args', '0');
-    $exception = (fn (string $email): RuntimeException => new RuntimeException("No user {$email}"))('a@bc.io');
+    $exception = withTraceArguments(fn (): RuntimeException => (fn (string $email): RuntimeException => new RuntimeException("No user {$email}"))('a@bc.io'));
 
     $entry = app(LogEntryFactory::class)->make(
         logRecord(message: 'Login failed for budi@example.com', context: ['exception' => $exception]),
@@ -120,15 +119,16 @@ it('survives context that cannot be serialised', function (): void {
 });
 
 it('never puts call arguments in the trace', function (): void {
-    ini_set('zend.exception_ignore_args', '0');
-    $login = fn (string $user, string $password): RuntimeException => new RuntimeException('Login failed');
-    $exception = $login('budi', 'hunter2pass');
+    withTraceArguments(function (): void {
+        $login = fn (string $user, string $password): RuntimeException => new RuntimeException('Login failed');
+        $exception = $login('budi', 'hunter2pass');
 
-    $entry = app(LogEntryFactory::class)->make(logRecord(context: ['exception' => $exception]), channelConfig(), 0);
+        $entry = app(LogEntryFactory::class)->make(logRecord(context: ['exception' => $exception]), channelConfig(), 0);
 
-    expect($exception->getTraceAsString())->toContain('hunter2pass')
-        ->and($entry->exceptions[0]->trace)->not->toContain('hunter2pass')->not->toContain('budi')
-        ->toContain('{closure')->toMatch('/#\d+ \{main\}$/');
+        expect($exception->getTraceAsString())->toContain('hunter2pass')
+            ->and($entry->exceptions[0]->trace)->not->toContain('hunter2pass')->not->toContain('budi')
+            ->toContain('{closure')->toMatch('/#\\d+ \\{main\\}$/');
+    });
 });
 
 it('redacts request values', function (): void {
